@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  node:
+    container_name: "anotaaiServer"
+    build: .
+    environment:
+      - DATABASE_URL=mongodb://anotaai:challenge@mongodb:27017/anotaai-challenge?authSource=admin
+      - JWT_SECRET=anotaaiChallenge
+    volumes:
+      - ./:/home/node/app/
+    depends_on:
+      - mongodb
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+    command: "npm run-script start"
+  mongodb:
+    container_name: "anotaaiDatabase"
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=anotaai
+      - MONGO_INITDB_ROOT_PASSWORD=challenge
+    networks:
+      - default
+networks:
+  default:
+volumes:
+  mongodb:

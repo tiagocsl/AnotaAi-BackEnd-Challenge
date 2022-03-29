@@ -1,0 +1,746 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "REST API",
+        "description": ""
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "schemes": [
+        "http"
+    ],
+    "tags": [
+        {
+            "name": "Users"
+        },
+        {
+            "name": "Categories"
+        },
+        {
+            "name": "Products"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "description": "",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Cria um login para usuário.",
+                "description": "Cria um novo login que será usado para acesso ao sistema.",
+                "requestBody": {
+                    "description": "Dados para criação do login",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterCommonUsers"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "token"
+                                    ],
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhb.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIi.lpBikrwO7XOIIAfH"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/admin": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Cria um login para um administrador.",
+                "description": "Cria um novo login de administrador que será usado para acesso ao sistema restrito.",
+                "requestBody": {
+                    "description": "Dados para criação do login",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterAdminUsers"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "token"
+                                    ],
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhb.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIi.lpBikrwO7XOIIAfH"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/authenticate": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Autentica um usuário que ainda não é cliente.",
+                "description": "Autentica um usuário, caso o usuário não existe, ou a combinação de usuário e senha, retorna erro.",
+                "requestBody": {
+                    "description": "Dados para autenticação do usuário",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "tigas@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "qwerty123"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "required": [
+                                        "token"
+                                    ],
+                                    "type": "object",
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "eyJ0eXAiOiJKV1QiLCJhb.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIi.lpBikrwO7XOIIAfH"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Autenticação inválida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "post": {
+                "tags": [
+                    "Categories"
+                ],
+                "summary": "Cria uma categoria de produtos.",
+                "description": "Cria uma categoria de produtos.",
+                "requestBody": {
+                    "description": "Dados para criação de uma categoria.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Eletrodomesticos."
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Categoria voltada apenas para aparelhos eletricos utilizados em casa."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cria e retorna os dados da categoria.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Categories"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos, ou já existentes.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "O requisitor não tem permissão para esse serviço.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "description": "Retorna uma lista com todas as categorias.",
+                "parameters": [
+                    {
+                        "name": "search_string",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Listar categorias que contenham os caracteres fornecidos."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de Categorias.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Categories"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "O requisitor não tem permissão para esse serviço.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "tags": [
+                    "Categories"
+                ],
+                "description": "Retorna todos os dados da categoria com o respectivo ID.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna dados de uma categoria especificada.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Categories"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products": {
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "summary": "Cria um produto.",
+                "description": "Cria um produto com os dados fornecidos.",
+                "requestBody": {
+                    "description": "Dados para criação de um produto.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "description",
+                                    "price",
+                                    "category"
+                                ],
+                                "type": "object",
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Celular LG K10."
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Com o LG K10 4G na mão, não há nada que você não possa fazer Acesse as redes sociais, compartilhe fotos, jogue, assista vídeos e muito mais."
+                                    },
+                                    "price": {
+                                        "type": "string",
+                                        "example": 1240
+                                    },
+                                    "category": {
+                                        "type": "string",
+                                        "example": "Eletronicos."
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Cria e retorna os dados do produto criado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Products"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos, ou já existentes.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "O requisitor não tem permissão para esse serviço.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "description": "Retorna uma lista com todos os produtos.",
+                "parameters": [
+                    {
+                        "name": "search_string",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Lista todos os produtos que contenham os caracteres fornecidos."
+                    },
+                    {
+                        "name": "category",
+                        "in": "query",
+                        "required": false,
+                        "type": "string",
+                        "description": "Lista todos os produtos por categoria(as). É possivel fornecer mais de uma categoria, desde que sejam separadas por vírgula."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de Produtos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Products"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "O requisitor não tem permissão para esse serviço.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/products/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "description": "Retorna todos os dados do produto com o respectivo ID.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna dados de um produto especificado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Products"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "O requisitor não tem permissão para esse serviço.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "description": "Atualiza os dados do produto com o respectivo ID.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Atualizado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "O requisitor não tem permissão para esse serviço.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "description": "Deleta o produto com o respectivo ID.",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deletado com sucesso.",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos ou incompletos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "O requisitor não tem permissão para esse serviço.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Erro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RegisterCommonUsers": {
+                "required": [
+                    "firstName",
+                    "lastName",
+                    "email",
+                    "password",
+                    "birthdate"
+                ],
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string",
+                        "description": "Campo texto de preenchimento obrigatório. Inserir primeiro nome do usuário.",
+                        "maxLength": 200,
+                        "example": "Joaquim"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "Campo texto de preenchimento obrigatório. Inserir último nome do usuário.",
+                        "maxLength": 200,
+                        "example": "Xavier"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "teste@gmail.com"
+                    },
+                    "birthdate": {
+                        "type": "string",
+                        "example": "21/12/2000"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "210491Ag"
+                    }
+                }
+            },
+            "RegisterAdminUsers": {
+                "required": [
+                    "firstName",
+                    "lastName",
+                    "email",
+                    "password",
+                    "birthdate"
+                ],
+                "type": "object",
+                "properties": {
+                    "firstName": {
+                        "type": "string",
+                        "description": "Campo texto de preenchimento obrigatório. Inserir primeiro nome do usuário.",
+                        "maxLength": 200,
+                        "example": "Joaquim"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "description": "Campo texto de preenchimento obrigatório. Inserir último nome do usuário.",
+                        "maxLength": 200,
+                        "example": "Xavier"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "teste@gmail.com"
+                    },
+                    "birthdate": {
+                        "type": "string",
+                        "example": "21/12/2000"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "210491Ag+"
+                    }
+                }
+            },
+            "Categories": {
+                "schema": {
+                    "required": [
+                        "name",
+                        "description"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "example": "Eletrodomesticos."
+                        },
+                        "description": {
+                            "type": "string",
+                            "example": "Categoria voltada apenas para aparelhos eletricos utilizados em casa."
+                        }
+                    }
+                }
+            },
+            "Products": {
+                "schema": {
+                    "required": [
+                        "name",
+                        "description",
+                        "price",
+                        "category"
+                    ],
+                    "type": "object",
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "example": "Celular LG K10."
+                        },
+                        "description": {
+                            "type": "string",
+                            "example": "Com o LG K10 4G na mão, não há nada que você não possa fazer Acesse as redes sociais, compartilhe fotos, jogue, assista vídeos e muito mais."
+                        },
+                        "price": {
+                            "type": "string",
+                            "example": 1240
+                        },
+                        "category": {
+                            "type": "string",
+                            "example": "Eletronicos."
+                        }
+                    }
+                }
+            },
+            "Erro": {
+                "description": "Mensagem de erro detalhada",
+                "properties": {
+                    "mensagem": {
+                        "type": "object",
+                        "description": "Conteúdo da mensagem de erro."
+                    }
+                }
+            }
+        }
+    }
+}

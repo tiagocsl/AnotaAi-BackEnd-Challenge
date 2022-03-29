@@ -1,0 +1,13 @@
+{
+    "ignore": [
+        "**/*.test.ts",
+        "**/*.spec.ts",
+        "node_modules"
+    ],
+    "watch": [
+        "src",
+        "swagger/swagger.json",
+        "index.ts"
+    ],
+    "ext": "ts"
+}
